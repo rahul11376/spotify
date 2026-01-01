@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
   BrowserRouter as Router,
@@ -9,25 +9,31 @@ import {
   useParams
 } from "react-router-dom";
 import { View } from './Components/View';
-
-
+import Playlistview from './Components/Playlistview';
+import Playlistcreate from './Components/Playlistcreate';
+import Songview from './Components/Songview';
 import Sidebar from './Components/Sidebar';
 import Navbar from './Components/Navbar';
 import Home from './Components/Home';
 import Footer from './Components/Footer';
 
 function App() {
+ const [data, setdata]= useState({});
   return (
     <Router>
       
     <AppContainer>
-      <Sidebar />
+      <Sidebar  data={data}  />
       <MainContent>
         <Navbar />
       
      <Routes>
             <Route path="/" element={<Home />} />          {/* Home page */}
-            <Route path="/view/:id" element={<View />} />  {/* View page */}
+            <Route path="/view/album/:id" element={<View />} />  {/* View page */}
+             <Route path="/view/playlist/:id" element={<Playlistview data={data}  />} />  {/* View page */}
+             <Route path="/view/song/:id" element={<Songview   />} />  {/* View page */}
+             <Route path="/Playlistcreate" element={<Playlistcreate setdata={setdata}  />} />  {/* View page */}
+             
           </Routes>
       </MainContent>
       <Footer />

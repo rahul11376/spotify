@@ -1,21 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
-
+import {albumsData} from "../assets/assets.js";
 
 const Home = () => {
   
-
+        
   return (
     <HomeContainer>
       <SectionTitle>Featured Charts</SectionTitle>
       <CardRow>
-        {[...Array(6)].map((_, id) => (
-          <Link key={id} to={`/view/${id}`} style={{ textDecoration: "none" }}>
+        {albumsData.map((album, i) => (
+          <Link key={album.id}     to={`/view/album/${album.id}`} style={{ textDecoration: "none" }}>
+           
             <Card  >
-              <CardImage />
-              <CardTitle>Top 50 {id === 1 ? 'India' : 'Global'}</CardTitle>
-              <CardDesc>Your weekly update of the most played tracks</CardDesc>
+              <CardImage  src={album.image}/>
+              <CardTitle>{album.name}</CardTitle>
+              <CardDesc>{album.desc}</CardDesc>
             </Card>
           </Link>
         ))}
@@ -78,14 +79,14 @@ const CardRow = styled.div`
 const Card = styled.div`
   cursor: pointer;
   background-color: #222222;
-  width: 150px;
+  width: 170px;
   flex: 0 0 auto;  // grow nhi karega , shrink nhi karega,base -- ek baar jagah lega
   border-radius: 8px;
   padding: 10px;
   box-sizing: border-box;
 `;
 
-const CardImage = styled.div`
+const CardImage = styled.img`
   background-color: #444;
   height: 150px;
   border-radius: 8px;

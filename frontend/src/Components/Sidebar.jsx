@@ -1,17 +1,71 @@
-import React from 'react';
-import styled from 'styled-components';
+import {React,useEffect,useState} from 'react';
+import styled, { isStyledComponent } from 'styled-components';
 import assets from '../assets/assets';
+import { useNavigate } from "react-router-dom";
+import { FaHeart, FaMusic, FaPodcast, FaStar } from "react-icons/fa";
 
-const Sidebar = () => {
+const iconOptions = [
+  { name: "Heart", icon: <FaHeart /> },
+  { name: "Music", icon: <FaMusic /> },
+  { name: "Podcast", icon: <FaPodcast /> },
+  { name: "Star", icon: <FaStar /> },
+];
+const Sidebar = ({data}) => {
+
+  const [playlist, setPlaylist] = useState({});
+
+  const [step,setstep] =useState(1);
+   const navigate = useNavigate(); 
+
+
+
+  useEffect(() => {
+    
+    const playlistStr = localStorage.getItem("playlist");
+
+    if (playlistStr) {
+     
+      const parsedPlaylist = JSON.parse(playlistStr);// CONVERT  STR TO OBJECT THROUGH PARSE
+      console.log("Loaded playlist from localStorage:", parsedPlaylist);
+      setPlaylist(parsedPlaylist);
+    } else {
+                                                 // If localStorage is empty, 
+      if (data) {
+        console.log("Using provided data:", data);
+        setPlaylist(data);
+      }
+    }
+
+    setstep(2);
+
+    console.log("Current playlist state:", playlist);
+
+  }, [data]);
+
+const { name = "", owner = "", songs = [], icon = "" } = playlist;
+
+
+
+
+  const handleclick =()=>{
+    navigate('/');
+  }
+const handleclicknavigate=()=>{
+    navigate('/view/playlist/:id');
+}
+  const addplaylist=()=>{
+  navigate('/Playlistcreate')
+  }
   return (
     <SidebarDiv>
       <TopSection>
-        <NavItem>
+        <NavItem onClick={handleclick}>
           <img src={assets.home_icon} alt="Home" />
-          <span>HOME</span>
+          <span >HOME</span>
         </NavItem>
         <NavItem>
           <img src={assets.search_icon} alt="Search" />
+   
           <span>SEARCH</span>
         </NavItem>
       </TopSection>
@@ -21,16 +75,99 @@ const Sidebar = () => {
           <img src={assets.stack_icon} alt="Library" />
           <h3>Your Library</h3>
           <LibraryActions>
-            <img src={assets.plus_icon} alt="Add" />
+            <img   onClick={addplaylist} src={assets.plus_icon} alt="Add" />
             <img src={assets.arrow_icon} alt="Next" />
           </LibraryActions>
         </LibraryHeader>
 
-        <Playlist>
+      {step== 1 && <Playlist>
           <h4>Create your first Playlist</h4>
           <p>It's easy we'll help you</p>
           <button>Create Playlist</button>
-        </Playlist>
+        </Playlist> }
+        {step== 2 && <Playlist onClick={handleclicknavigate}>
+           <div
+    style={{
+      width:"100%",
+      display: "flex",
+      alignItems: "center",
+     backgroundColor: "#121212",
+      padding: 12,
+     // borderRadius: 8,
+      cursor: "pointer",
+      //marginTop: 15,
+        width: "100%", // Full width
+      transition: "background-color 0.2s",
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#282828")}
+    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#121212")}
+  >
+    {/* Icon with gradient background */}
+    <div
+      style={{
+        width: 56,
+        height: 56,
+        borderRadius: 6,
+        background:
+          "linear-gradient(135deg, #450af5, #c4efd9)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: 16,
+        color: "white",
+        fontSize: 28,
+      }}
+    >
+      {iconOptions.find((option) => option.name === icon)?.icon || <FaHeart />}
+    </div>
+
+    {/* Playlist info */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          color: "white",
+          fontWeight: "700",
+          fontSize: 16,
+          marginBottom: 4,
+        }}
+      >
+        {name || "Unnamed Playlist"}
+      </div>
+
+      <div
+        style={{
+          color: "#b3b3b3",
+          fontSize: 13,
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
+        {/* Inline SVG green pin icon */}
+        <svg
+          fill="#1db954"
+          height="14"
+          viewBox="0 0 24 24"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+        </svg>
+        <span>{`Playlist · ${songs.length} songs`}</span>
+      </div>
+    </div>
+  </div>
+          {/* <div>{name}</div>
+          <div>{owner}</div>
+          <div> {songs}</div>
+         <div>  {iconOptions.find(option => option.name === icon)?.icon}</div> */}
+
+             {/* <ul>
+         {playlists.map((pl) => (
+        <li key={pl.id}>{pl.name}</li>
+          ))}
+         </ul> */}
+        </Playlist> }
 
         <Playlist>
           <h4>Let's find some podcast to follow</h4>
